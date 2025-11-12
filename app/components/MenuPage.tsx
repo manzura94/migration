@@ -8,6 +8,9 @@ import {
   MergedProduct,
 } from "../types/product.inteface";
 import ProductCard from "./ProductCard";
+import { useAuth } from "../context/AuthContext";
+
+
 
 
 const categoryButtons = [
@@ -28,6 +31,9 @@ export default function MenuPage() {
   const [products, setProducts] = useState<MergedProduct[]>([]);
   const [error, setError] = useState(false);
   const [loader, setLoader] = useState(false);
+  const {isLoggedIn} = useAuth();
+  console.log(isLoggedIn, 'user');
+  
 
   async function getAllProducts(): Promise<MergedProduct[]> {
     try {

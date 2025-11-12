@@ -1,8 +1,9 @@
-
 'use client';
+
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { BackendProduct, MenuProduct, MergedProduct } from '../types/product.inteface';
+import { useAuth } from '../context/AuthContext';
 
 
 
@@ -21,10 +22,14 @@ export default function ProductModal({open,  setOpen, selectedProduct }: Product
   const [activeSize, setActiveSize]=useState('s');
   const [selectedAdditives, setSelectedAdditives] = useState<string[]>([]);
   const [error, setError] = useState(false);
+  const {isLoggedIn} = useAuth();
 
   const handleCloseModal =()=>{
     setOpen(false);
     setData(null)
+    setError(false);
+    setSelectedAdditives([]);
+    setActiveSize('s');
   }
 
 
@@ -41,9 +46,24 @@ export default function ProductModal({open,  setOpen, selectedProduct }: Product
   )
   };
 
-  const totalPrice = (()=>{
+  
+
+  const totalDiscountPrice = (()=>{
     if(!data) return 0;
-   const basePrice = parseFloat(data.sizes[activeSize].price);
+   const basePrice = isLoggedIn && data.sizes[activeSize].discountPrice ? parseFloat(data.sizes[activeSize].discountPrice) : parseFloat(data.sizes[activeSize].price);
+   const additivesPrice = selectedAdditives.reduce((sum, additiveName) => {
+    const additive = data.additives.find(a => a.name === additiveName);
+    const discountAdd = additive?.discountPrice ?? additive?.price
+    return additive ? sum + parseFloat(discountAdd!) : sum;
+  }, 0);
+
+  return basePrice + additivesPrice;
+
+  })()
+
+   const totalPrice = (()=>{
+    if(!data) return 0;
+   const basePrice =  parseFloat(data.sizes[activeSize].price);
    const additivesPrice = selectedAdditives.reduce((sum, additiveName) => {
     const additive = data.additives.find(a => a.name === additiveName);
     return additive ? sum + parseFloat(additive.price) : sum;
@@ -96,12 +116,12 @@ console.log(data)
     
     <div className='modal-overlay' onClick={() => setOpen(false)} >
           <div  className='modal' onClick={(e) => e.stopPropagation()}>
-           {error? <div className="modal__wrapper">
+           {error? (<div className="modal__wrapper">
              <p className='modal__error'>Oops! Something went wrong.</p>
                 <div className="modal__wrapper__closebtn" onClick={handleCloseModal}>
                     <Image alt='close-button' width={50} height={50} src={'/images/icons/button-close.svg'} className='closebtn-image'/>
                 </div>
-           </div> : data ? <div className="modal__wrapper">
+           </div>) : (data ? <div className="modal__wrapper">
                 <div className="modal__image">
                     <div className="modal__image-wrap">
                         <Image alt='product-image'  src={`${data?.imageUrl ?? '/images/tea-2.jpg'}`} className='modal-image' width={400} height={400}/>
@@ -132,10 +152,14 @@ console.log(data)
                          <div className="modal__price">
                             <h4 className="modal__price-title">Total:</h4>
                             <h4 className="modal__price-num">
-                                 <span className="modal__price-sign">$</span>
-                            <span className='modal__price-price'>{totalPrice.toFixed(2)}</span>
-                            <span className='modal__price-old'></span>
-                            <span className='modal__price-discount'></span>
+                                 {isLoggedIn && totalDiscountPrice && totalDiscountPrice != totalPrice ? 
+                                 <>
+                                 <span className='modal__price-discount'>${totalDiscountPrice.toFixed(2)}</span>
+                                 <span className='modal__price-old'>${totalPrice.toFixed(2)}</span>
+                                 </>:
+                                 
+                            <span className='modal__price-price'>${totalPrice.toFixed(2)}</span>
+                                }
                             </h4>
                            
                          </div>
@@ -145,7 +169,7 @@ console.log(data)
                 <div className="modal__wrapper__closebtn" onClick={handleCloseModal}>
                     <Image alt='close-button' width={50} height={50} src={'/images/icons/button-close.svg'} className='closebtn-image'/>
                 </div>
-            </div> : <div className="loader">Loading...</div>}
+            </div> : <div className="loader"></div>)}
           </div>
         </div>
   );
