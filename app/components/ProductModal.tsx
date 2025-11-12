@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { BackendProduct, MenuProduct, MergedProduct } from '../types/product.inteface';
 
 
+
+
 interface ProductModalProps {
     open: boolean;
   setOpen: (open: boolean) => void;
@@ -18,6 +20,12 @@ export default function ProductModal({open,  setOpen, selectedProduct }: Product
   const [data, setData] = useState<MergedProduct | null>(null);
   const [activeSize, setActiveSize]=useState('s');
   const [selectedAdditives, setSelectedAdditives] = useState<string[]>([]);
+  const [error, setError] = useState(false);
+
+  const handleCloseModal =()=>{
+    setOpen(false);
+    setData(null)
+  }
 
 
   const handleSizeButtonClick = (item: string)=>{
@@ -58,7 +66,7 @@ export default function ProductModal({open,  setOpen, selectedProduct }: Product
     ]);
 
     if (!backendRes.ok || !menuRes.ok) {
-      return null;
+      setError(true);
     }
 
     const backendJson = await backendRes.json();
@@ -73,9 +81,10 @@ export default function ProductModal({open,  setOpen, selectedProduct }: Product
     };
 
     setData( mergedProduct);
-
+    setError(false)
   } catch (error) {
     console.log(error)
+    setError(true)
   }
 }
 getProductById(selectedProduct);
@@ -84,9 +93,15 @@ console.log(data)
 
   if (!open) return null;
   return (
-    <div className="modal-overlay" onClick={() => setOpen(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-           { data && <div className="modal__wrapper">
+    
+    <div className='modal-overlay' onClick={() => setOpen(false)} >
+          <div  className='modal' onClick={(e) => e.stopPropagation()}>
+           {error? <div className="modal__wrapper">
+             <p className='modal__error'>Oops! Something went wrong.</p>
+                <div className="modal__wrapper__closebtn" onClick={handleCloseModal}>
+                    <Image alt='close-button' width={50} height={50} src={'/images/icons/button-close.svg'} className='closebtn-image'/>
+                </div>
+           </div> : data ? <div className="modal__wrapper">
                 <div className="modal__image">
                     <div className="modal__image-wrap">
                         <Image alt='product-image'  src={`${data?.imageUrl ?? '/images/tea-2.jpg'}`} className='modal-image' width={400} height={400}/>
@@ -127,10 +142,10 @@ console.log(data)
                     </div>
                     <button className="modal__closebtn">Add to cart</button>
                 </div>
-                <div className="modal__wrapper__closebtn" onClick={()=>setOpen(false)}>
+                <div className="modal__wrapper__closebtn" onClick={handleCloseModal}>
                     <Image alt='close-button' width={50} height={50} src={'/images/icons/button-close.svg'} className='closebtn-image'/>
                 </div>
-            </div>}
+            </div> : <div className="loader">Loading...</div>}
           </div>
         </div>
   );
