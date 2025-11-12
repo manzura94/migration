@@ -1,0 +1,55 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  min-height: 100%;
+  padding: 20px 40px 40px;
+  background: $background-body;
+  align-items: center;
+  position: relative;
+
+  @include media(685) {
+    padding: 20px 16px 40px;
+  }
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ccc;
+  border-top-color: $text-accent;
+  border-radius: 50%;
+  margin: 50px auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[class*="__container"] {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+[class*="__title"] {
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 125%;
+  color: $text-dark;
+
+  @include media(600) {
+    font-size: 32px;
+  }
+
+  i {
+    color: $text-accent;
+  }
+}
