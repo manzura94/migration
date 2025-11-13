@@ -7,7 +7,8 @@ import Image from "next/image";
 
 
 
-const BASE_URL = "https://6kt29kkeub.execute-api.eu-central-1.amazonaws.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);

@@ -22,6 +22,9 @@ const placeholders = [
   "/images/coffee-slider-3.png",
 ];
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+
 const Favorite = () => {
   const [coffees, setCoffees] = useState<Coffee[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +33,7 @@ const Favorite = () => {
     const fetchCoffees = async () => {
       try {
         const res = await fetch(
-          "https://6kt29kkeub.execute-api.eu-central-1.amazonaws.com/products/favorites",
+          `${BASE_URL}/products/favorites`,
         );
         if (!res.ok) throw new Error("Error fetching coffees");
 

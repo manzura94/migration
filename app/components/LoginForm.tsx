@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AuthResponse } from "../types/auth.interface";
 
-const BASE_URL = "https://6kt29kkeub.execute-api.eu-central-1.amazonaws.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({

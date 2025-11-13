@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { UserData } from "../types/auth.interface";
 
-const BASE_URL = "https://6kt29kkeub.execute-api.eu-central-1.amazonaws.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
 
 const cityToStreets: Record<string, string[]> = {
   newyork: ["5th Ave", "Broadway", "Wall Street"],

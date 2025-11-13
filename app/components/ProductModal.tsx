@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { BackendProduct, MenuProduct, MergedProduct } from '../types/product.inteface';
 import { useAuth } from '../context/AuthContext';
-
+import { CartItems } from '../types/cart.interface';
 
 
 
@@ -14,7 +14,7 @@ interface ProductModalProps {
 selectedProduct: number | null
 };
 
-const BASE_URL = "https://6kt29kkeub.execute-api.eu-central-1.amazonaws.com";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
 export default function ProductModal({open,  setOpen, selectedProduct }: ProductModalProps) {
@@ -71,7 +71,53 @@ export default function ProductModal({open,  setOpen, selectedProduct }: Product
 
   return basePrice + additivesPrice;
 
-  })()
+  })();
+
+  const handleAddToCart = (item: MergedProduct)=>{
+     const newItem = {
+    id: item.id,
+    name: item.name,
+    imageUrl: item.imageUrl,
+    size: { name: activeSize, price: item.sizes[activeSize].price },
+    additives: selectedAdditives,
+    totalPrice: totalDiscountPrice ?? totalPrice , 
+    quantity: 1,
+    isDiscounted: isLoggedIn,
+
+    actualTotal: totalPrice,
+    discountedTotal: totalDiscountPrice,
+  } 
+
+    const cartItems = localStorage.getItem('cart');
+  const cart = cartItems ? JSON.parse(cartItems) : []
+
+    const existingIndex = cart.findIndex(
+    (item: CartItems) =>
+      item.id === newItem.id &&
+      item.size.name === newItem.size.name &&
+      JSON.stringify(item.additives) === JSON.stringify(newItem.additives),
+  );
+
+
+  if (existingIndex !== -1) {
+    const updatedItem = { ...cart[existingIndex] };
+    updatedItem.quantity = cart[existingIndex].quantity + 1;
+    updatedItem.totalPrice = Number((cart[existingIndex].totalPrice + newItem.totalPrice).toFixed(2));
+    const newCart = [...cart];
+    newCart[existingIndex] = updatedItem;
+    console.log(newCart);
+   localStorage.setItem('cart', JSON.stringify(newCart))
+  } else{
+   const items = [...cart, newItem];
+   localStorage.setItem('cart', JSON.stringify(items))
+  }
+
+  setOpen(false);
+  setSelectedAdditives([]);
+  setActiveSize('s');
+  
+}
+
 
   
 
@@ -109,7 +155,7 @@ export default function ProductModal({open,  setOpen, selectedProduct }: Product
 }
 getProductById(selectedProduct);
 }, [open, selectedProduct]);
-console.log(data)
+
 
   if (!open) return null;
   return (
@@ -164,7 +210,7 @@ console.log(data)
                            
                          </div>
                     </div>
-                    <button className="modal__closebtn">Add to cart</button>
+                    <button className="modal__closebtn" onClick={()=>handleAddToCart(data)}>Add to cart</button>
                 </div>
                 <div className="modal__wrapper__closebtn" onClick={handleCloseModal}>
                     <Image alt='close-button' width={50} height={50} src={'/images/icons/button-close.svg'} className='closebtn-image'/>
