@@ -1,7 +1,6 @@
 @use "./variables" as *;
 @use "./mixins" as *;
 
-
 .page {
   padding: 40px;
 }
@@ -14,11 +13,10 @@
   cursor: pointer;
 }
 
-
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.6);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,7 +29,7 @@
   border-radius: 16px;
   position: relative;
 
-  &__error{
+  &__error {
     padding: 50px;
     color: rgb(181, 47, 47);
     font-weight: bold;
@@ -47,8 +45,6 @@
   cursor: pointer;
 }
 
-
-
 .modal {
   position: fixed;
   width: 100%;
@@ -62,7 +58,7 @@
   justify-content: center;
   z-index: 10;
 
-  &__price-old{
+  &__price-old {
     color: #726e67;
     text-decoration: line-through;
   }
@@ -149,9 +145,9 @@
     margin-bottom: 12px;
   }
 
-  &__subtitle{
+  &__subtitle {
     font-size: 18px;
-     font-weight: 600;
+    font-weight: 600;
     line-height: 125%;
     margin: 12px;
   }
@@ -178,13 +174,11 @@
     font-weight: 600;
     line-height: 125%;
     color: $text-dark;
-    margin-top:10px ;
+    margin-top: 10px;
 
-    &-num{
+    &-num {
       display: flex;
       gap: 5px;
     }
   }
 }
-
-

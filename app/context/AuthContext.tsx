@@ -1,5 +1,5 @@
 // context/AuthContext.tsx
-'use client';
+"use client";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface AuthContextType {
@@ -10,26 +10,24 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-   const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
     if (typeof window !== "undefined") {
       return !!localStorage.getItem("user");
     }
     return false;
   });
 
- 
   const logout = () => {
     setIsLoggedIn(false);
     localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn,logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

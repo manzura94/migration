@@ -12,6 +12,7 @@ export interface CartItem {
   quantity: number;
   discountedTotal?: number;
   actualTotal?: number;
+  cartId?: string | number;
 }
 
 export interface CartItems {

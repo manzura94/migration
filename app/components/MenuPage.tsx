@@ -8,20 +8,13 @@ import {
   MergedProduct,
 } from "../types/product.inteface";
 import ProductCard from "./ProductCard";
-import { useAuth } from "../context/AuthContext";
-
-
-
+// import { useAuth } from "../context/AuthContext";
 
 const categoryButtons = [
   { id: 1, name: "coffee", image: "/images/icons/coffe.svg", alt: "coffee" },
   { id: 2, name: "tea", image: "/images/icons/tea.svg", alt: "tea" },
   { id: 3, name: "dessert", image: "/images/icons/cake.svg", alt: "cake" },
 ];
-
-
-
-
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const FAVORITES_ENDPOINT = `${BASE_URL}/products`;
@@ -31,9 +24,7 @@ export default function MenuPage() {
   const [products, setProducts] = useState<MergedProduct[]>([]);
   const [error, setError] = useState(false);
   const [loader, setLoader] = useState(false);
-  const {isLoggedIn} = useAuth();
-  console.log(isLoggedIn, 'user');
-  
+  // const { isLoggedIn } = useAuth();
 
   async function getAllProducts(): Promise<MergedProduct[]> {
     try {
@@ -80,8 +71,6 @@ export default function MenuPage() {
     }, 3000);
   };
 
-
-
   useEffect(() => {
     getAllProducts();
   }, []);
@@ -89,7 +78,6 @@ export default function MenuPage() {
   const filteredProducts = products.filter(
     (item) => item.category === category,
   );
-
 
   return (
     <main className="menu menu__container">
@@ -117,7 +105,7 @@ export default function MenuPage() {
           ⚠ Failed to load menu. Try again later.
         </div>
       ) : (
-        <ProductCard filteredProducts={filteredProducts}/>
+        <ProductCard filteredProducts={filteredProducts} />
       )}
       <button className="menu__showmore">
         <Image

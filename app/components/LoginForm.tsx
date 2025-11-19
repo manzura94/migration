@@ -72,7 +72,7 @@ export default function LoginForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      console.log(response);
+
 
       const data: AuthResponse = await response.json();
       if (!response.ok) {

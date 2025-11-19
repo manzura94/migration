@@ -26,12 +26,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
       <body>
         <AuthProvider>
-
-        <div className="wrapper">
-          <Navbar />
-          <>{children}</>
-          <Footer />
-        </div>
+          <div className="wrapper">
+            <Navbar />
+            <>{children}</>
+            <Footer />
+          </div>
         </AuthProvider>
       </body>
     </html>
