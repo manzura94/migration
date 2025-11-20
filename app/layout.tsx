@@ -4,6 +4,7 @@ import "./globals.scss";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
@@ -26,11 +27,13 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
       <body>
         <AuthProvider>
-          <div className="wrapper">
-            <Navbar />
-            <>{children}</>
-            <Footer />
-          </div>
+          <CartProvider>    
+            <div className="wrapper">
+              <Navbar />
+              {children}
+              <Footer />
+            </div>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

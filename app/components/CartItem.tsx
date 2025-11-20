@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { CartItem } from "../types/cart.interface";
 import { Dispatch, SetStateAction } from "react";
+import { useCart } from "../context/CartContext";
 
 interface ChildProps {
     cart: CartItem[];
@@ -10,10 +11,13 @@ interface ChildProps {
 }
 
 export default function CartItemPage({ cart, setCart }: ChildProps) {
+    const { updateCart } = useCart();
+  
   const removeItem = (id: number | string) => {
     const updated = cart.filter((item) => item.cartId !== id);
     setCart(updated);
     localStorage.setItem("cart", JSON.stringify(updated));
+      updateCart();
   };
 
   return (

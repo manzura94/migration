@@ -9,6 +9,7 @@ import {
 } from "../types/product.inteface";
 import { useAuth } from "../context/AuthContext";
 import { CartItems } from "../types/cart.interface";
+import { useCart } from "../context/CartContext";
 
 interface ProductModalProps {
   open: boolean;
@@ -28,6 +29,7 @@ export default function ProductModal({
   const [selectedAdditives, setSelectedAdditives] = useState<string[]>([]);
   const [error, setError] = useState(false);
   const { isLoggedIn } = useAuth();
+  const { updateCart } = useCart();
 
   const handleCloseModal = () => {
     setOpen(false);
@@ -116,6 +118,7 @@ export default function ProductModal({
       const items = [...cart, newItem];
       localStorage.setItem("cart", JSON.stringify(items));
     }
+    updateCart();
 
     setOpen(false);
     setSelectedAdditives([]);

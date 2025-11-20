@@ -1,10 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+      const { cartCount, hydrated } = useCart();
+        const { isLoggedIn } = useAuth();
+      
+  
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -53,7 +59,7 @@ const Navbar = () => {
         </nav>
 
         <div className={"header__icons"}>
-          <div className="header__shopping-cart">
+         {hydrated && (isLoggedIn || cartCount > 0)  && <div className="header__shopping-cart">
             <Link href="/cart" className={"cartpath__link"}>
               <Image
                 src="/images/icons/shopping-bag.svg"
@@ -62,8 +68,9 @@ const Navbar = () => {
                 height={23}
               />
             </Link>
-            <span className={"cart-items"}>2</span>
-          </div>
+            <span className={"cart-items"}>{cartCount !== 0 && cartCount}</span>
+
+          </div>}
 
           <div className={"menupath"}>
             <Link href="/menu" className={"menupath__link"}>

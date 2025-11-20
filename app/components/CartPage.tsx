@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { UserInfo } from "../types/auth.interface";
 import { CartItem } from "../types/cart.interface";
 import CartItemPage from "./CartItem";
+import { useCart } from "../context/CartContext";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -16,6 +17,8 @@ export default function CartPage() {
     message: string;
     type: "success" | "error";
   } | null>(null);
+    const { updateCart } = useCart();
+  
 
   useEffect(() => {
   if (notification) {
@@ -79,6 +82,7 @@ export default function CartPage() {
 
       localStorage.removeItem("cart");
       setCart([]);
+    
       setNotification({
         message:
           "Thank you for your order! Our manager will contact you shortly.",
@@ -92,6 +96,7 @@ export default function CartPage() {
     } finally {
       setLoading(false);
     }
+      updateCart();
   };
 
   const handleAuthRedirect = (path: string) => {
